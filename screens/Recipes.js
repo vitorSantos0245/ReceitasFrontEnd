@@ -1,57 +1,114 @@
 import { useState } from "react";
-import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import { Text, TouchableOpacity, View, StyleSheet, FlatList, ScrollView } from "react-native";
+import AddRecipes from "../components/AddReceitas";
+
 
 const dados_fake = [
-    {id: 1,nome: 'Bolo de banana', modo_preparo: 'Mistura', ingredientes: 'Banana, caramelo, trigo e ovo', usuario_id:1, categoria_id:1 } ,
-    {id: 2,nome: 'Bolo de morango', modo_preparo: 'Mistura', ingredientes: 'Morango, trigo e ovo', usuario_id:1, categoria_id:1}
+    {
+        id: 1, nome: 'Bolo de banana',
+        modo_preparo: 'Mistura',
+        ingredientes: 'Banana, caramelo, trigo e ovo',
+        usuario_id: 1,
+        categoria_id: 1
+    },
+    {
+        id: 2, nome: 'Bolo de morango',
+        modo_preparo: 'Mistura',
+        ingredientes: 'Morango, trigo e ovo',
+        usuario_id: 1,
+        categoria_id: 1
+    }
 ]
 
-export default function Receitas({navigation}) {
-const [view, setView] = useState('');
+export default function Receitas({ navigation }) {
+    const [view, setView] = useState('');
 
- return(
-        <View style={style.container}>
+    const renderItem = ({ item }) => {
+        console.log(item)
+        return (
+            <View style={style.card}>
+                <Text style={style.textButton}>
+                    Titulo
+                </Text>
+                
+                <Text style={style.cardItem}>
+                    {item.nome}
+                </Text>
+
+                <Text style={style.textButton}>
+                    ingredientes
+                </Text>
+                
+                <Text style={style.cardItem}>
+                    {item.ingredientes}
+                </Text>
+
+                <Text style={style.textButton}>
+                    Modo de Preparo
+                </Text>
+                
+                <Text style={style.cardItem}>
+                    {item.modo_preparo}
+                </Text>
+
+                <TouchableOpacity style={style.button} onPress={() => navigation.goback()} >
+                        <Text style={style.textButton}>Editar</Text>
+                    </TouchableOpacity>
+
+                <TouchableOpacity style={style.button} onPress={() => navigation.goback()} >
+                        <Text style={style.textButton}>Deletar</Text>
+                    </TouchableOpacity>
+            </View>
+        )
+    }
+
+    return (
+        <ScrollView>
+  
             <Text style={style.title}>
                 Receitas
             </Text>
-
-            <TouchableOpacity onPress={() => navigation.navigate('Home')} style={style.button}>
-                <Text style={style.textButton}>Voltar</Text>
-            </TouchableOpacity>
 
             {(view === 'list') ? (
                 <View>
                     <TouchableOpacity style={style.button} onPress={() => setView('form')} >
                         <Text style={style.textButton}>Adicionar Receita</Text>
                     </TouchableOpacity>
+
+                    <FlatList
+                        data={dados_fake}
+                        keyExtractor={item => item.id.toString()}
+                        renderItem={renderItem}
+                    />
                 </View>
-            ):(
+            ) : (
                 <View>
                     <TouchableOpacity style={style.button} onPress={() => setView('list')} >
                         <Text style={style.textButton}>Ver Receita</Text>
                     </TouchableOpacity>
+
+                    <AddRecipes></AddRecipes>
                 </View>
             )}
-
-        </View>
+        </ScrollView>
     )
 }
 
 const style = StyleSheet.create({
     container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 28
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 28
     },
     title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 20,
-      color:'#FF0000',
-      textAlign: 'center'
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        color: '#FF0000',
+        textAlign: 'center'
     },
-    button:{
+    button: {
         backgroundColor: '#000',
         color: '#FFF',
         padding: 15,
@@ -60,5 +117,15 @@ const style = StyleSheet.create({
     textButton: {
         color: '#FFF',
         fontWeight: 'bold'
+    },
+    card:{
+        backgroundColor:'#1a2b4a',
+        padding:30,
+        borderRadius: 10,
+        marginBlock: 20
+    },
+    cardItem: {
+        color:'#fff',
+        marginBottom:10
     }
-  })
+})
