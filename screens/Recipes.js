@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import { Text, TouchableOpacity, View, StyleSheet, FlatList, ScrollView } from "react-native";
 import AddRecipes from "../components/AddReceitas";
+import { getRecipes } from "../services/Recipes.service";
 
 
 const dados_fake = [
@@ -21,7 +22,17 @@ const dados_fake = [
 ]
 
 export default function Receitas({ navigation }) {
-    const [view, setView] = useState('');
+    const [view, setView] = useState('list');
+    const [recipes, setRecipes] = useState([])
+
+    const carregar = async () => {
+        const data = await getRecipes()
+        setRecipes(data)
+    }
+
+    useEffect(() => {
+        carregar()
+      }, []);
 
     const renderItem = ({ item }) => {
         console.log(item)
@@ -51,11 +62,11 @@ export default function Receitas({ navigation }) {
                     {item.modo_preparo}
                 </Text>
 
-                <TouchableOpacity style={style.button} onPress={() => navigation.goback()} >
+                <TouchableOpacity style={style.button} onPress={() => navigation.goBack()}>
                         <Text style={style.textButton}>Editar</Text>
                     </TouchableOpacity>
 
-                <TouchableOpacity style={style.button} onPress={() => navigation.goback()} >
+                <TouchableOpacity style={style.button} onPress={() => navigation.goBack()} >
                         <Text style={style.textButton}>Deletar</Text>
                     </TouchableOpacity>
             </View>
@@ -76,7 +87,7 @@ export default function Receitas({ navigation }) {
                     </TouchableOpacity>
 
                     <FlatList
-                        data={dados_fake}
+                        data={recipes}
                         keyExtractor={item => item.id.toString()}
                         renderItem={renderItem}
                     />
