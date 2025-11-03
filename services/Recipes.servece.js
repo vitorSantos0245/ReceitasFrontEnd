@@ -6,7 +6,7 @@ export async function getRecipes() {
     try {
       const response = await fetch(request, { method: 'GET' });
       const data = await response.json();
-      return data;
+      return data.data;
     } catch (e) {
       console.error('Erro ao buscar receitas:', e);
       return [];
